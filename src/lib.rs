@@ -9,12 +9,12 @@ pub fn compile(music_folder: &str, output_file: &str) -> Result<(), Box<dyn std:
     for dir in std::fs::read_dir(music_folder)? {
         let path = dir?.path();
         if path.is_file() {
-            let content = std::fs::read_to_string(path)?;
-            let ser_music_file: SerializedMusicFile = ron::from_str(&content)?;
+            let content = std::fs::read_to_string(&path)?;
+            let ser_music_file: SerializedMusicFile = ron::from_str(&content).map_err(|err| format!("File: {:?} had error {}", path, err))?;
             let music_bytes = std::fs::read(ser_music_file.file)?;
             music.push(SerializedMusicData {
                 bytes: music_bytes,
-                music: ser_music_file.data,
+                music: ser_music_file.music,
             });
         }
     }
