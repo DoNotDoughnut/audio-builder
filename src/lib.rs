@@ -40,6 +40,6 @@ pub fn compile(music_folder: &str, output_file: &str) -> Result<(), Box<dyn std:
     }
 
     let mut file = std::fs::File::create(output_file)?;
-    file.write(&bincode::serialize(&data)?)?;
+    file.write(&postcard::to_allocvec(&data)?)?;
     Ok(())
 }
